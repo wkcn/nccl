@@ -289,6 +289,28 @@ struct FuncSum<__nv_bfloat16> {
 #endif
   }
 };
+
+template<>
+struct FuncSum<__nv_fp8_e4m3> {
+  __device__ FuncSum(uint64_t opArg=0) {}
+  __device__ __nv_fp8x2_e4m3 operator()(const __nv_fp8x2_e4m3 x, const __nv_fp8x2_e4m3 y) const {
+    return static_cast<__nv_fp8x2_e4m3>(__hadd2(static_cast<__half2>(x), static_cast<__half2>(y)));
+   }
+  __device__ __nv_fp8_e4m3 operator()(const __nv_fp8_e4m3 x, const __nv_fp8_e4m3 y) const {
+    return static_cast<__nv_fp8_e4m3>(__hadd(static_cast<__half>(x), static_cast<__half>(y)));
+  }
+};
+
+template<>
+struct FuncSum<__nv_fp8_e5m2> {
+  __device__ FuncSum(uint64_t opArg=0) {}
+  __device__ __nv_fp8x2_e5m2 operator()(const __nv_fp8x2_e5m2 x, const __nv_fp8x2_e5m2 y) const {
+    return static_cast<__nv_fp8x2_e5m2>(__hadd2(static_cast<__half2>(x), static_cast<__half2>(y)));
+   }
+  __device__ __nv_fp8_e5m2 operator()(const __nv_fp8_e5m2 x, const __nv_fp8_e5m2 y) const {
+    return static_cast<__nv_fp8_e5m2>(__hadd(static_cast<__half>(x), static_cast<__half>(y)));
+  }
+};
 #endif
 
 template<>
@@ -337,6 +359,28 @@ struct FuncProd<__nv_bfloat16> {
 #else
     return __float2bfloat16( __bfloat162float(x) * __bfloat162float(y) );
 #endif
+  }
+};
+
+template<>
+struct FuncProd<__nv_fp8_e4m3> {
+  __device__ FuncProd(uint64_t opArg=0) {}
+  __device__ __nv_fp8x2_e4m3 operator()(const __nv_fp8x2_e4m3 x, const __nv_fp8x2_e4m3 y) const {
+    return static_cast<__nv_fp8x2_e4m3>(__hmul2(static_cast<__half2>(x), static_cast<__half2>(y)));
+   }
+  __device__ __nv_fp8_e4m3 operator()(const __nv_fp8_e4m3 x, const __nv_fp8_e4m3 y) const {
+    return static_cast<__nv_fp8_e4m3>(__hmul(static_cast<__half>(x), static_cast<__half>(y)));
+  }
+};
+
+template<>
+struct FuncProd<__nv_fp8_e5m2> {
+  __device__ FuncProd(uint64_t opArg=0) {}
+  __device__ __nv_fp8x2_e5m2 operator()(const __nv_fp8x2_e5m2 x, const __nv_fp8x2_e5m2 y) const {
+    return static_cast<__nv_fp8x2_e5m2>(__hmul2(static_cast<__half2>(x), static_cast<__half2>(y)));
+   }
+  __device__ __nv_fp8_e5m2 operator()(const __nv_fp8_e5m2 x, const __nv_fp8_e5m2 y) const {
+    return static_cast<__nv_fp8_e5m2>(__hmul(static_cast<__half>(x), static_cast<__half>(y)));
   }
 };
 #endif
@@ -388,6 +432,28 @@ struct FuncMax<__nv_bfloat16> {
 #endif
   }
 };
+
+template<>
+struct FuncMax<__nv_fp8_e4m3> {
+  __device__ FuncMax(uint64_t opArg=0) {}
+  __device__ __nv_fp8x2_e4m3 operator()(const __nv_fp8x2_e4m3 x, const __nv_fp8x2_e4m3 y) const {
+    return static_cast<__nv_fp8x2_e4m3>(__hmax2(static_cast<__half2>(x), static_cast<__half2>(y)));
+   }
+  __device__ __nv_fp8_e4m3 operator()(const __nv_fp8_e4m3 x, const __nv_fp8_e4m3 y) const {
+    return static_cast<__nv_fp8_e4m3>(__hmax(static_cast<__half>(x), static_cast<__half>(y)));
+  }
+};
+
+template<>
+struct FuncMax<__nv_fp8_e5m2> {
+  __device__ FuncMax(uint64_t opArg=0) {}
+  __device__ __nv_fp8x2_e5m2 operator()(const __nv_fp8x2_e5m2 x, const __nv_fp8x2_e5m2 y) const {
+    return static_cast<__nv_fp8x2_e5m2>(__hmax2(static_cast<__half2>(x), static_cast<__half2>(y)));
+   }
+  __device__ __nv_fp8_e5m2 operator()(const __nv_fp8_e5m2 x, const __nv_fp8_e5m2 y) const {
+    return static_cast<__nv_fp8_e5m2>(__hmax(static_cast<__half>(x), static_cast<__half>(y)));
+  }
+};
 #endif
 
 template<>
@@ -437,6 +503,28 @@ struct FuncMin<__nv_bfloat16> {
 #endif
   }
 };
+
+template<>
+struct FuncMin<__nv_fp8_e4m3> {
+  __device__ FuncMin(uint64_t opArg=0) {}
+  __device__ __nv_fp8x2_e4m3 operator()(const __nv_fp8x2_e4m3 x, const __nv_fp8x2_e4m3 y) const {
+    return static_cast<__nv_fp8x2_e4m3>(__hmin2(static_cast<__half2>(x), static_cast<__half2>(y)));
+   }
+  __device__ __nv_fp8_e4m3 operator()(const __nv_fp8_e4m3 x, const __nv_fp8_e4m3 y) const {
+    return static_cast<__nv_fp8_e4m3>(__hmin(static_cast<__half>(x), static_cast<__half>(y)));
+  }
+};
+
+template<>
+struct FuncMin<__nv_fp8_e5m2> {
+  __device__ FuncMin(uint64_t opArg=0) {}
+  __device__ __nv_fp8x2_e5m2 operator()(const __nv_fp8x2_e5m2 x, const __nv_fp8x2_e5m2 y) const {
+    return static_cast<__nv_fp8x2_e5m2>(__hmin2(static_cast<__half2>(x), static_cast<__half2>(y)));
+   }
+  __device__ __nv_fp8_e5m2 operator()(const __nv_fp8_e5m2 x, const __nv_fp8_e5m2 y) const {
+    return static_cast<__nv_fp8_e5m2>(__hmin(static_cast<__half>(x), static_cast<__half>(y)));
+  }
+};
 #endif
 
 template<>
@@ -476,6 +564,10 @@ struct IsFloatingPoint<half>: std::true_type {};
 #if defined(__CUDA_BF16_TYPES_EXIST__)
 template<>
 struct IsFloatingPoint<__nv_bfloat16>: std::true_type {};
+template<>
+struct IsFloatingPoint<__nv_fp8_e4m3>: std::true_type {};
+template<>
+struct IsFloatingPoint<__nv_fp8_e5m2>: std::true_type {};
 #endif
 template<>
 struct IsFloatingPoint<float>: std::true_type {};
@@ -672,6 +764,71 @@ struct FuncPreMulSum<__nv_bfloat16>: FuncSum<__nv_bfloat16> {
   }
 #endif
 };
+
+template<>
+struct FuncPreMulSum<__nv_fp8_e4m3>: FuncSum<__nv_fp8_e4m3> {
+  // Change these to switch between all prescale, all postscale, or both by sqrt(N).
+  // Obviously, the only invalid combination is both true. An improvement would be
+  // make this parameterized as a build time setting and passed here through
+  // preprocessor definitions.
+  static constexpr bool IsPreOpIdentity = false;
+  static constexpr bool IsPostOpIdentity = true;
+
+  __nv_fp8_e4m3 scale;
+  __nv_fp8x2_e4m3 scale2;
+  __device__ FuncPreMulSum(uint64_t opArg) {
+    scale = *(__nv_fp8_e4m3*)&opArg;
+    scale2.__x =
+      (static_cast<__nv_fp8x2_storage_t>(scale.__x) << 8U) |
+      static_cast<__nv_fp8x2_storage_t>(scale.__x);
+  }
+  // inherits FuncSum::operator()
+  __device__ __nv_fp8_e4m3 preOp(__nv_fp8_e4m3 x) const {
+    return IsPreOpIdentity ? x : static_cast<__nv_fp8_e4m3>(__hmul(static_cast<__half>(x), static_cast<__half>(scale)));
+  }
+  __device__ __nv_fp8x2_e4m3 preOp(__nv_fp8x2_e4m3 x) const {
+    return IsPreOpIdentity ? x : static_cast<__nv_fp8x2_e4m3>(__hmul2(static_cast<__half2>(x), static_cast<__half2>(scale2)));
+  }
+  __device__ __nv_fp8_e4m3 postOp(__nv_fp8_e4m3 x) const {
+    return IsPostOpIdentity ? x : static_cast<__nv_fp8_e4m3>(__hmul(static_cast<__half>(x), static_cast<__half>(scale)));
+  }
+  __device__ __nv_fp8x2_e4m3 postOp(__nv_fp8x2_e4m3 x) const {
+    return IsPostOpIdentity ? x :static_cast<__nv_fp8x2_e4m3>(__hmul2(static_cast<__half2>(x), static_cast<__half2>(scale2)));
+  }
+};
+
+template<>
+struct FuncPreMulSum<__nv_fp8_e5m2>: FuncSum<__nv_fp8_e5m2> {
+  // Change these to switch between all prescale, all postscale, or both by sqrt(N).
+  // Obviously, the only invalid combination is both true. An improvement would be
+  // make this parameterized as a build time setting and passed here through
+  // preprocessor definitions.
+  static constexpr bool IsPreOpIdentity = false;
+  static constexpr bool IsPostOpIdentity = true;
+
+  __nv_fp8_e5m2 scale;
+  __nv_fp8x2_e5m2 scale2;
+  __device__ FuncPreMulSum(uint64_t opArg) {
+    scale = *(__nv_fp8_e5m2*)&opArg;
+    scale2.__x =
+      (static_cast<__nv_fp8x2_storage_t>(scale.__x) << 8U) |
+      static_cast<__nv_fp8x2_storage_t>(scale.__x);
+  }
+  // inherits FuncSum::operator()
+  __device__ __nv_fp8_e5m2 preOp(__nv_fp8_e5m2 x) const {
+    return IsPreOpIdentity ? x : static_cast<__nv_fp8_e5m2>(__hmul(static_cast<__half>(x), static_cast<__half>(scale)));
+  }
+  __device__ __nv_fp8x2_e5m2 preOp(__nv_fp8x2_e5m2 x) const {
+    return IsPreOpIdentity ? x : static_cast<__nv_fp8x2_e5m2>(__hmul2(static_cast<__half2>(x), static_cast<__half2>(scale2)));
+  }
+  __device__ __nv_fp8_e5m2 postOp(__nv_fp8_e5m2 x) const {
+    return IsPostOpIdentity ? x : static_cast<__nv_fp8_e5m2>(__hmul(static_cast<__half>(x), static_cast<__half>(scale)));
+  }
+  __device__ __nv_fp8x2_e5m2 postOp(__nv_fp8x2_e5m2 x) const {
+    return IsPostOpIdentity ? x :static_cast<__nv_fp8x2_e5m2>(__hmul2(static_cast<__half2>(x), static_cast<__half2>(scale2)));
+  }
+};
+
 #endif
 
 template<typename T>

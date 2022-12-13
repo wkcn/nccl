@@ -283,6 +283,85 @@ struct MULTI<FUNC, __nv_bfloat16> {
     return c.pack;
   }
 };
+
+template<class FUNC>
+struct MULTI<FUNC, __nv_fp8_e4m3> {
+  static_assert(sizeof(PackType) == 8 * sizeof(__nv_fp8_e4m3),
+      "PackType must be eight times the size of __nv_fp8_e4m3.");
+
+  union Converter {
+    PackType pack;
+    __nv_fp8x2_e4m3 q2[4];
+  };
+  __device__ PackType operator()(FUNC fn, const PackType x, const PackType y) const {
+    Converter cx, cy, cr;
+    cx.pack = x;
+    cy.pack = y;
+    cr.q2[0] = fn(cx.q2[0], cy.q2[0]);
+    cr.q2[1] = fn(cx.q2[1], cy.q2[1]);
+    cr.q2[2] = fn(cx.q2[2], cy.q2[2]);
+    cr.q2[3] = fn(cx.q2[3], cy.q2[3]);
+    return cr.pack;
+  }
+  __device__ PackType preOp(FUNC fn, PackType x) const {
+    Converter c;
+    c.pack = x;
+    c.q2[0] = FuncTraits<FUNC>().preOp(fn, c.q2[0]);
+    c.q2[1] = FuncTraits<FUNC>().preOp(fn, c.q2[1]);
+    c.q2[2] = FuncTraits<FUNC>().preOp(fn, c.q2[2]);
+    c.q2[3] = FuncTraits<FUNC>().preOp(fn, c.q2[3]);
+    return c.pack;
+  }
+  __device__ PackType postOp(FUNC fn, PackType x) const {
+    Converter c;
+    c.pack = x;
+    c.q2[0] = FuncTraits<FUNC>().postOp(fn, c.q2[0]);
+    c.q2[1] = FuncTraits<FUNC>().postOp(fn, c.q2[1]);
+    c.q2[2] = FuncTraits<FUNC>().postOp(fn, c.q2[2]);
+    c.q2[3] = FuncTraits<FUNC>().postOp(fn, c.q2[3]);
+    return c.pack;
+  }
+};
+
+template<class FUNC>
+struct MULTI<FUNC, __nv_fp8_e5m2> {
+  static_assert(sizeof(PackType) == 8 * sizeof(__nv_fp8_e5m2),
+      "PackType must be eight times the size of __nv_fp8_e5m2.");
+
+  union Converter {
+    PackType pack;
+    __nv_fp8x2_e5m2 q2[4];
+  };
+  __device__ PackType operator()(FUNC fn, const PackType x, const PackType y) const {
+    Converter cx, cy, cr;
+    cx.pack = x;
+    cy.pack = y;
+    cr.q2[0] = fn(cx.q2[0], cy.q2[0]);
+    cr.q2[1] = fn(cx.q2[1], cy.q2[1]);
+    cr.q2[2] = fn(cx.q2[2], cy.q2[2]);
+    cr.q2[3] = fn(cx.q2[3], cy.q2[3]);
+    return cr.pack;
+  }
+  __device__ PackType preOp(FUNC fn, PackType x) const {
+    Converter c;
+    c.pack = x;
+    c.q2[0] = FuncTraits<FUNC>().preOp(fn, c.q2[0]);
+    c.q2[1] = FuncTraits<FUNC>().preOp(fn, c.q2[1]);
+    c.q2[2] = FuncTraits<FUNC>().preOp(fn, c.q2[2]);
+    c.q2[3] = FuncTraits<FUNC>().preOp(fn, c.q2[3]);
+    return c.pack;
+  }
+  __device__ PackType postOp(FUNC fn, PackType x) const {
+    Converter c;
+    c.pack = x;
+    c.q2[0] = FuncTraits<FUNC>().postOp(fn, c.q2[0]);
+    c.q2[1] = FuncTraits<FUNC>().postOp(fn, c.q2[1]);
+    c.q2[2] = FuncTraits<FUNC>().postOp(fn, c.q2[2]);
+    c.q2[3] = FuncTraits<FUNC>().postOp(fn, c.q2[3]);
+    return c.pack;
+  }
+};
+
 #endif
 
 template<class FUNC>
@@ -460,6 +539,31 @@ template<> inline __device__
 void vStore<__nv_bfloat16>(volatile __nv_bfloat16* ptr, const __nv_bfloat16 val) {
   ((__nv_bfloat16*)ptr)[0] = val;
 }
+
+template<> inline __device__
+__nv_fp8_e4m3 vFetch<__nv_fp8_e4m3>(const volatile __nv_fp8_e4m3* ptr) {
+  __nv_fp8_e4m3 r;
+  r = ((__nv_fp8_e4m3*)ptr)[0];
+  return r;
+}
+
+template<> inline __device__
+void vStore<__nv_fp8_e4m3>(volatile __nv_fp8_e4m3* ptr, const __nv_fp8_e4m3 val) {
+  ((__nv_fp8_e4m3*)ptr)[0] = val;
+}
+
+template<> inline __device__
+__nv_fp8_e5m2 vFetch<__nv_fp8_e5m2>(const volatile __nv_fp8_e5m2* ptr) {
+  __nv_fp8_e5m2 r;
+  r = ((__nv_fp8_e5m2*)ptr)[0];
+  return r;
+}
+
+template<> inline __device__
+void vStore<__nv_fp8_e5m2>(volatile __nv_fp8_e5m2* ptr, const __nv_fp8_e5m2 val) {
+  ((__nv_fp8_e5m2*)ptr)[0] = val;
+}
+
 #endif
 
 typedef ulong2 Pack128;

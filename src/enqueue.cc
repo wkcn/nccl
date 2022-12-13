@@ -54,7 +54,16 @@ struct ncclKernelMatch {
   MACRO_IF(HAVE_BFLOAT16, \
     SINGLE_ARG(, NCCL_FUNC4(func, devredop, MACRO_IF(reduction, __nv_bfloat16, int8_t), specialized)), \
     /*nothing*/ \
+  ) \
+  MACRO_IF(HAVE_BFLOAT16, \
+    SINGLE_ARG(, NCCL_FUNC4(func, devredop, MACRO_IF(reduction, __nv_fp8_e4m3, int8_t), specialized)), \
+    /*nothing*/ \
+  ) \
+  MACRO_IF(HAVE_BFLOAT16, \
+    SINGLE_ARG(, NCCL_FUNC4(func, devredop, MACRO_IF(reduction, __nv_fp8_e5m2, int8_t), specialized)), \
+    /*nothing*/ \
   )
+
 
 // Must be consistent with ncclDevRedOp_t -- but we only generate kernel for sums.
 #define NCCL_FUNCS2(func, reduction) \
@@ -80,6 +89,8 @@ static const ncclKernelMatch ncclKerns[1+ncclNumTypes+NCCL_NUM_FUNCTIONS*ncclNum
   {/*double*/(void*)NCCL_KERN_NAME(SendRecv, RING, SIMPLE, Sum, int8_t), false},
   #if HAVE_BFLOAT16
     {/*bfloat16*/(void*)NCCL_KERN_NAME(SendRecv, RING, SIMPLE, Sum, int8_t), false},
+    {/*fp8_e4m3*/(void*)NCCL_KERN_NAME(SendRecv, RING, SIMPLE, Sum, int8_t), false},
+    {/*fp8_e5m2*/(void*)NCCL_KERN_NAME(SendRecv, RING, SIMPLE, Sum, int8_t), false},
   #endif
   NCCL_FUNCS2(Broadcast, /*reduction=*/0),
   NCCL_FUNCS2(Reduce, /*reduction=*/1),
@@ -1376,6 +1387,8 @@ static ncclResult_t hostToDevRedOp(
     half f16;
     #if defined(__CUDA_BF16_TYPES_EXIST__)
       __nv_bfloat16 bf16;
+      __nv_fp8_e4m3 fp8_e4m3;
+      __nv_fp8_e5m2 fp8_e5m2;
     #endif
     float f32;
     double f64;
@@ -1403,6 +1416,14 @@ static ncclResult_t hostToDevRedOp(
     case ncclBfloat16:
       opFull->op = ncclDevPreMulSum;
       bf16 = __float2bfloat16(float(1.0/comm->nRanks));
+      break;
+    case ncclFp8E4M3:
+      opFull->op = ncclDevPreMulSum;
+      fp8_e4m3 = static_cast<__nv_fp8_e4m3>(float(1.0/comm->nRanks));
+      break;
+    case ncclFp8E5M2:
+      opFull->op = ncclDevPreMulSum;
+      fp8_e5m2 = static_cast<__nv_fp8_e5m2>(float(1.0/comm->nRanks));
       break;
     #endif
     case ncclFloat32:
