@@ -774,26 +774,23 @@ struct FuncPreMulSum<__nv_fp8_e4m3>: FuncSum<__nv_fp8_e4m3> {
   static constexpr bool IsPreOpIdentity = false;
   static constexpr bool IsPostOpIdentity = true;
 
-  __nv_fp8_e4m3 scale;
-  __nv_fp8x2_e4m3 scale2;
+  half2 scale;
   __device__ FuncPreMulSum(uint64_t opArg) {
-    scale = *(__nv_fp8_e4m3*)&opArg;
-    scale2.__x =
-      (static_cast<__nv_fp8x2_storage_t>(scale.__x) << 8U) |
-      static_cast<__nv_fp8x2_storage_t>(scale.__x);
+    scale.x = *(half*)&opArg;
+    scale.y = scale.x;
   }
   // inherits FuncSum::operator()
   __device__ __nv_fp8_e4m3 preOp(__nv_fp8_e4m3 x) const {
-    return IsPreOpIdentity ? x : static_cast<__nv_fp8_e4m3>(__hmul(static_cast<__half>(x), static_cast<__half>(scale)));
+    return IsPreOpIdentity ? x : static_cast<__nv_fp8_e4m3>(__hmul(static_cast<__half>(x), scale.x));
   }
   __device__ __nv_fp8x2_e4m3 preOp(__nv_fp8x2_e4m3 x) const {
-    return IsPreOpIdentity ? x : static_cast<__nv_fp8x2_e4m3>(__hmul2(static_cast<__half2>(x), static_cast<__half2>(scale2)));
+    return IsPreOpIdentity ? x : static_cast<__nv_fp8x2_e4m3>(__hmul2(static_cast<__half2>(x), scale));
   }
   __device__ __nv_fp8_e4m3 postOp(__nv_fp8_e4m3 x) const {
-    return IsPostOpIdentity ? x : static_cast<__nv_fp8_e4m3>(__hmul(static_cast<__half>(x), static_cast<__half>(scale)));
+    return IsPostOpIdentity ? x : static_cast<__nv_fp8_e4m3>(__hmul(static_cast<__half>(x), scale.x));
   }
   __device__ __nv_fp8x2_e4m3 postOp(__nv_fp8x2_e4m3 x) const {
-    return IsPostOpIdentity ? x :static_cast<__nv_fp8x2_e4m3>(__hmul2(static_cast<__half2>(x), static_cast<__half2>(scale2)));
+    return IsPostOpIdentity ? x :static_cast<__nv_fp8x2_e4m3>(__hmul2(static_cast<__half2>(x), scale));
   }
 };
 
@@ -806,26 +803,23 @@ struct FuncPreMulSum<__nv_fp8_e5m2>: FuncSum<__nv_fp8_e5m2> {
   static constexpr bool IsPreOpIdentity = false;
   static constexpr bool IsPostOpIdentity = true;
 
-  __nv_fp8_e5m2 scale;
-  __nv_fp8x2_e5m2 scale2;
+  half2 scale;
   __device__ FuncPreMulSum(uint64_t opArg) {
-    scale = *(__nv_fp8_e5m2*)&opArg;
-    scale2.__x =
-      (static_cast<__nv_fp8x2_storage_t>(scale.__x) << 8U) |
-      static_cast<__nv_fp8x2_storage_t>(scale.__x);
+    scale.x = *(half*)&opArg;
+    scale.y = scale.x;
   }
   // inherits FuncSum::operator()
   __device__ __nv_fp8_e5m2 preOp(__nv_fp8_e5m2 x) const {
-    return IsPreOpIdentity ? x : static_cast<__nv_fp8_e5m2>(__hmul(static_cast<__half>(x), static_cast<__half>(scale)));
+    return IsPreOpIdentity ? x : static_cast<__nv_fp8_e5m2>(__hmul(static_cast<__half>(x), scale.x));
   }
   __device__ __nv_fp8x2_e5m2 preOp(__nv_fp8x2_e5m2 x) const {
-    return IsPreOpIdentity ? x : static_cast<__nv_fp8x2_e5m2>(__hmul2(static_cast<__half2>(x), static_cast<__half2>(scale2)));
+    return IsPreOpIdentity ? x : static_cast<__nv_fp8x2_e5m2>(__hmul2(static_cast<__half2>(x), scale));
   }
   __device__ __nv_fp8_e5m2 postOp(__nv_fp8_e5m2 x) const {
-    return IsPostOpIdentity ? x : static_cast<__nv_fp8_e5m2>(__hmul(static_cast<__half>(x), static_cast<__half>(scale)));
+    return IsPostOpIdentity ? x : static_cast<__nv_fp8_e5m2>(__hmul(static_cast<__half>(x), scale.x));
   }
   __device__ __nv_fp8x2_e5m2 postOp(__nv_fp8x2_e5m2 x) const {
-    return IsPostOpIdentity ? x :static_cast<__nv_fp8x2_e5m2>(__hmul2(static_cast<__half2>(x), static_cast<__half2>(scale2)));
+    return IsPostOpIdentity ? x :static_cast<__nv_fp8x2_e5m2>(__hmul2(static_cast<__half2>(x), scale));
   }
 };
 

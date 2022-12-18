@@ -1419,11 +1419,11 @@ static ncclResult_t hostToDevRedOp(
       break;
     case ncclFp8E4M3:
       opFull->op = ncclDevPreMulSum;
-      fp8_e4m3 = static_cast<__nv_fp8_e4m3>(float(1.0/comm->nRanks));
+      f16 = __float2half(float(1.0/comm->nRanks)); // __double2half not supported pre CUDA 11.x
       break;
     case ncclFp8E5M2:
       opFull->op = ncclDevPreMulSum;
-      fp8_e5m2 = static_cast<__nv_fp8_e5m2>(float(1.0/comm->nRanks));
+      f16 = __float2half(float(1.0/comm->nRanks)); // __double2half not supported pre CUDA 11.x
       break;
     #endif
     case ncclFloat32:
