@@ -30,23 +30,24 @@ x = xs[rank].clone()
 set_fp8_mode(enabled=False)
 torch.distributed.all_reduce(x, op=dist.ReduceOp.SUM)
 
-if torch.all(x == target, dtype=torch.uint8, device='cuda'):
+if torch.all(x == target):
     print('[passed] uint8 all reduce passed')
 else:
-    print('[failed] uint8 all reduce failed')
+    print(f'[failed] uint8 all reduce failed. Output: {x}, target: {target}')
 
 # test case 2
 # Check fp8e4m3 all reduce
 # E4M3: 4 exponent bits, 3 mantissa bits
-xs = [torch.tensor([0b01001000, 0b01011000], dtype=torch.uint8, device='cuda'),
-      torch.tensor([0b01010000, 0b01011000], dtype=torch.uint8, device='cuda')]
-target = torch.tensor([0b01011100, 0b01101000], dtype=torch.uint8, device='cuda')
+xs = [torch.tensor([0b01001010, 0b01011000], dtype=torch.uint8, device='cuda'),
+      torch.tensor([0b01010000, 0b01011100], dtype=torch.uint8, device='cuda')]
+target = torch.tensor([0b01010101, 0b01100010], dtype=torch.uint8, device='cuda')
+
 x = xs[rank].clone()
 
 set_fp8_mode(enabled=True)
 torch.distributed.all_reduce(x, op=dist.ReduceOp.SUM)
 
-if torch.all(x == target, dtype=torch.uint8, device='cuda'):
+if torch.all(x == target):
     print('[passed] fp8e4m3 all reduce passed')
 else:
-    print('[failed] fp8e4m3 all reduce failed')
+    print(f'[failed] fp8e4m3 all reduce failed. Output: {x}, target: {target}')
