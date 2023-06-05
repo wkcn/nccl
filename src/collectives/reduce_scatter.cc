@@ -7,11 +7,13 @@
 #include "enqueue.h"
 #include "collectives.h"
 #include "nccl.h"
+#include "hack_data_type.h"
 
 NCCL_API(ncclResult_t, ncclReduceScatter, const void* sendbuff, void* recvbuff, size_t recvcount,
     ncclDataType_t datatype, ncclRedOp_t op, ncclComm* comm, cudaStream_t stream);
 ncclResult_t ncclReduceScatter(const void* sendbuff, void* recvbuff, size_t recvcount,
     ncclDataType_t datatype, ncclRedOp_t op, ncclComm* comm, cudaStream_t stream) {
+  datatype = HackDataType(datatype);
   struct NvtxParamsReduceScatter {
     size_t bytes;
     ncclRedOp_t op;
